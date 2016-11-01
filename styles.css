@@ -1,0 +1,29 @@
+body {
+  width: 960px;
+}
+
+.images {
+  width: 50%;
+  height: 50%;
+}
+
+div.pic-box {
+  display: inline-block;
+  width: 450px;
+  height: 360px;
+  margin: 30px 47.5px 30px 47.5px;
+  background-repeat:no-repeat;
+  border: 2px solid black;
+}
+
+.left {
+  float:left;
+}
+
+.center {
+  align-content: center;
+}
+
+.right {
+  float: right;
+}
