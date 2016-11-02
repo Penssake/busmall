@@ -58,44 +58,49 @@ function reset(){
   }
 }
 
-// function preventRepeat(){
-//   for(var i = 0; i < oldImages.length; i++){
-//     oldImages[i].repeat = true;
-//   }
-// }
-
 function randomProduct(){
   var index = Math.floor(Math.random() * allProducts.length);
   var product = allProducts[index];
-  currentImages.push(product);
   return product;
 }
 
 function displayProducts(event){
-  clickTotal++;
   console.log(event);
   if (event) {
-    for(var i = 0; i < 3; i++){
-      var product = randomProduct();
-      if (currentImages.indexOf(product) !== -1 && product.repeat === false ){
-        imageZones[i].setAttribute('style', 'background-image: url(' + product.path + ')');
-        product.numShown++;
-        product.repeat = true;
-      } else {
-        i--;
-      }
-      oldImages = currentImages;
-    }
+    clickTotal++;
     var productChosen = event.target.attributes.style.value;
     for(var i = 0; i < currentImages.length; i++){
       if (currentImages[i].idx === productChosen) {
         currentImages[i].numClicks++;
       }
     }
+    for(var i = 0; i < 3; i++){
+      var product = randomProduct();
+      if (currentImages.indexOf(product) === -1 && product.repeat === false && oldImages.indexOf(product) === -1 ){
+        imageZones[i].setAttribute('style', 'background-image: url(' + product.path + ')');
+        product.numShown++;
+        product.repeat = true;
+        currentImages.push(product);
+      } else {
+        i--;
+      }
+    }
+  } else {
+    for(var i = 0; i < 3; i++){
+      var product = randomProduct();
+      if (currentImages.indexOf(product) === -1 && product.repeat === false ){
+        imageZones[i].setAttribute('style', 'background-image: url(' + product.path + ')');
+        product.numShown++;
+        product.repeat = true;
+        currentImages.push(product);
+      } else {
+        i--;
+      }
+    }
   }
+  oldImages = currentImages;
   if (clickTotal % 3 === 0){
     reset();
-    // preventRepeat();
   }
   function endOfSurvey() {
     if(clickTotal >= 25) {
@@ -105,7 +110,7 @@ function displayProducts(event){
       console.log('we\'ve reached the limit!');
       for (var i = 0; i < allProducts.length; i++){
         var thisProduct = allProducts[i];
-        if (thisProduct.shown === 0) {
+        if (thisProduct.numShown === 0) {
           thisProduct.clickRate = 0;
         } else {
           thisProduct.clickRate = (thisProduct.numClicks / thisProduct.numShown * 100).toFixed(2);
@@ -117,6 +122,7 @@ function displayProducts(event){
   }
   endOfSurvey();
 }
+displayProducts();
 
 //function here to display clickTotal
 
@@ -145,7 +151,7 @@ function createTable(){
         datasets: [{
           label: 'Clickrate Percentage',
           data: clickRates,
-          backgroundColor: ['#DCDCDC'],
+          backgroundColor: ['#FFFFFF'],
           borderColor: ['#0075C9']
         }]
       }
