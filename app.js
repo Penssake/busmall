@@ -2,11 +2,22 @@
 
 var allProducts = [];
 var currentImages = [];
+var oldImages = [];
 var clickTotal = 0;
+
+var imageZones = [];
+
+var zone1 = document.getElementById('zone1');
+imageZones.push(zone1);
+var zone2 = document.getElementById('zone2');
+imageZones.push(zone2);
+var zone3 = document.getElementById('zone3');
+imageZones.push(zone3);
 
 function Product(name,filePath,description){
   this.name = name;
   this.path = filePath;
+  this.idx = 'background-image: url(' + this.path + ')';
   this.description = description;
   this.numShown = 0;
   this.numClicks = 0;
@@ -33,13 +44,9 @@ var shark = new Product('shark', 'images/shark.png', 'Is your kid overly excited
 var baby = new Product('baby-sweep', 'images/baby.png', 'Being a parent is hard enough, why not benefit from all that youthful energy?');
 var tauntaun = new Product('tauntaun', 'images/tauntaun.png', 'This new product Strikes Back with plush interior. (will not keep you alive in snowstorm)');
 var unicorn = new Product('unicorn', 'images/unicorn.png', 'Prolong your life and confronting your weird diets!');
-var usb = new Product('usb', 'images/usb.png', 'To be honest, not sure why anyone would want this.');
+var usb = new Product('usb', 'images/usb.gif', 'To be honest, not sure why anyone would want this.');
 var waterCan = new Product('water-can', 'images/water-can.png', 'It never runs out of water! -Ryan Lochte');
 var wineGlass = new Product('wine-glass', 'images/wine-glass.png', 'Impress AND confuse even your snobbiest of wino friends!');
-
-var zone1 = document.getElementById('zone1');
-var zone2 = document.getElementById('zone2');
-var zone3 = document.getElementById('zone3');
 
 function reset(){
   for(var i = 0; i < allProducts.length; i++) {
@@ -50,33 +57,48 @@ function reset(){
 
 function randomProduct(){
   var index = Math.floor(Math.random() * allProducts.length);
-  var choice = allProducts[index];
-  if(choice.repeat === false) {
-    currentImages.push(choice);
-    return choice;
-  } else {
-    return randomProduct();
-  }
+  var product = allProducts[index];
+  currentImages.push(product);
+  return product;
 }
 
 function displayProducts(event){
-  console.log(event);
-  if(currentImages.length === 0) {
-    var product1 = randomProduct();
-    zone1.setAttribute('style', 'background-image: url(' + product1.path + ')');
-    product1.numShown++;
-    product1.repeat = true;
-    var product2 = randomProduct();
-    zone2.setAttribute('style', 'background-image: url(' + product2.path + ')');
-    product2.numShown++;
-    product2.repeat = true;
-    var product3 = randomProduct();
-    zone3.setAttribute('style', 'background-image: url(' + product3.path + ')');
-    product3.numShown++;
-    product3.repeat = true;
-  }
-  currentImages = [];
   clickTotal++;
+  console.log(event);
+  if (event) {
+    for(var i = 0; i < 3; i++){
+      var product = randomProduct();
+      if (currentImages.indexOf(product) !== -1 && product.repeat === false){
+        imageZones[i].setAttribute('style', 'background-image: url(' + product.path + ')');
+        product.numShown++;
+        product.repeat = true;
+        currentImages.push(product);
+      } else {
+        i--;
+      }
+    }
+    // var product1 = randomProduct();
+    // zone1.setAttribute('style', 'background-image: url(' + product1.path + ')');
+    // product1.numShown++;
+    // product1.repeat = true;
+    // if (currentImages.indexOf(product1) > -1){
+    //   currentImages.push(product1);
+    // }
+    // var product2 = randomProduct();
+    // zone2.setAttribute('style', 'background-image: url(' + product2.path + ')');
+    // product2.numShown++;
+    // product2.repeat = true;
+    // var product3 = randomProduct();
+    // zone3.setAttribute('style', 'background-image: url(' + product3.path + ')');
+    // product3.numShown++;
+    // product3.repeat = true;
+    var productChosen = event.target.attributes.style.value;
+    for(var i = 0; i < currentImages.length; i++){
+      if (currentImages[i].idx === productChosen) {
+        currentImages[i].numClicks++;
+      }
+    }
+  }
   if(clickTotal >= 25) {
     zone1.removeEventListener('click', displayProducts);
     zone2.removeEventListener('click', displayProducts);
@@ -84,6 +106,8 @@ function displayProducts(event){
     console.log('we\'ve reached the limit!');
   }
 }
+
+//function here to display clickTotal
 
 zone1.addEventListener('click', displayProducts);
 zone2.addEventListener('click', displayProducts);
