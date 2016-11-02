@@ -51,8 +51,8 @@ var waterCan = new Product('water-can', 'images/water-can.png', 'It never runs o
 var wineGlass = new Product('wine-glass', 'images/wine-glass.png', 'Impress AND confuse even your snobbiest of wino friends!');
 
 function reset(){
-  oldImages = currentImages;
-  currentImages = [];
+  // oldImages = currentImages;
+  // currentImages = [];
   for(var i = 0; i < allProducts.length; i++) {
     allProducts[i].repeat = false;
     console.log('I\'ve reset!');
@@ -78,11 +78,10 @@ function displayProducts(event){
   if (event) {
     for(var i = 0; i < 3; i++){
       var product = randomProduct();
-      while (currentImages.indexOf(product) !== -1 && product.repeat === false ){
+      if (currentImages.indexOf(product) !== -1 && product.repeat === false ){
         imageZones[i].setAttribute('style', 'background-image: url(' + product.path + ')');
         product.numShown++;
         product.repeat = true;
-        oldImages.push(product);
       } else {
         i--;
       }
