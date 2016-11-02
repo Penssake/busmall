@@ -58,6 +58,13 @@ function reset(){
   }
 }
 
+function getStarted(){
+  for(var i = 0; i < 3; i++){
+    imageZones[i].setAttribute('style', 'background-image: url(images/get-started.png)');
+  }
+  clickTotal--;
+}
+
 function randomProduct(){
   var index = Math.floor(Math.random() * allProducts.length);
   var product = allProducts[index];
@@ -86,17 +93,7 @@ function displayProducts(event){
       }
     }
   } else {
-    for(var i = 0; i < 3; i++){
-      var product = randomProduct();
-      if (currentImages.indexOf(product) === -1 && product.repeat === false ){
-        imageZones[i].setAttribute('style', 'background-image: url(' + product.path + ')');
-        product.numShown++;
-        product.repeat = true;
-        currentImages.push(product);
-      } else {
-        i--;
-      }
-    }
+    getStarted();
   }
   oldImages = currentImages;
   if (clickTotal % 3 === 0){
