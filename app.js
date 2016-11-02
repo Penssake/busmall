@@ -1,11 +1,13 @@
 'use strict';
 
+var clickTotal = 0;
+
 var allProducts = [];
 var currentImages = [];
 var oldImages = [];
-var clickTotal = 0;
-
 var imageZones = [];
+
+var displayTable = false;
 
 var zone1 = document.getElementById('zone1');
 imageZones.push(zone1);
@@ -88,12 +90,30 @@ function displayProducts(event){
   if (clickTotal % 3 === 0){
     reset();
   }
-  if(clickTotal >= 25) {
-    zone1.removeEventListener('click', displayProducts);
-    zone2.removeEventListener('click', displayProducts);
-    zone3.removeEventListener('click', displayProducts);
-    console.log('we\'ve reached the limit!');
+  function endOfSurvey() {
+    if(clickTotal >= 25) {
+      zone1.removeEventListener('click', displayProducts);
+      zone2.removeEventListener('click', displayProducts);
+      zone3.removeEventListener('click', displayProducts);
+      console.log('we\'ve reached the limit!');
+      for (var i = 0; i < allProducts.length; i++){
+        console.log('making a list or trying');
+        var thisProduct = allProducts[i];
+        var li = document.createElement('li');
+        var fillerInfo = '';
+        fillerInfo += thisProduct.name;
+        if (thisProduct.shown === 0) {
+          fillerInfo += ' | Click Rate: 0%';
+        } else {
+          fillerInfo += ' | Click Rate: ' + (thisProduct.numClicks / thisProduct.numShown * 100).toFixed(2) + '%';
+        }
+        li.innerText = fillerInfo;
+        ul.appendChild(li);
+        displayTable = true;
+      }
+    }
   }
+  endOfSurvey();
 }
 
 //function here to display clickTotal
@@ -101,3 +121,11 @@ function displayProducts(event){
 zone1.addEventListener('click', displayProducts);
 zone2.addEventListener('click', displayProducts);
 zone3.addEventListener('click', displayProducts);
+
+var section = document.getElementById('results-zone');
+var ul = document.createElement('ul');
+section.appendChild(ul);
+
+if(displayTable){
+  
+}
