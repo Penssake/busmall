@@ -51,6 +51,7 @@ var wineGlass = new Product('wine-glass', 'images/wine-glass.png', 'Impress AND 
 function reset(){
   for(var i = 0; i < allProducts.length; i++) {
     allProducts[i].repeat = false;
+    currentImages = [];
     console.log('I\'ve reset!');
   }
 }
@@ -77,27 +78,15 @@ function displayProducts(event){
         i--;
       }
     }
-    // var product1 = randomProduct();
-    // zone1.setAttribute('style', 'background-image: url(' + product1.path + ')');
-    // product1.numShown++;
-    // product1.repeat = true;
-    // if (currentImages.indexOf(product1) > -1){
-    //   currentImages.push(product1);
-    // }
-    // var product2 = randomProduct();
-    // zone2.setAttribute('style', 'background-image: url(' + product2.path + ')');
-    // product2.numShown++;
-    // product2.repeat = true;
-    // var product3 = randomProduct();
-    // zone3.setAttribute('style', 'background-image: url(' + product3.path + ')');
-    // product3.numShown++;
-    // product3.repeat = true;
     var productChosen = event.target.attributes.style.value;
     for(var i = 0; i < currentImages.length; i++){
       if (currentImages[i].idx === productChosen) {
         currentImages[i].numClicks++;
       }
     }
+  }
+  if (clickTotal % 3 === 0){
+    reset();
   }
   if(clickTotal >= 25) {
     zone1.removeEventListener('click', displayProducts);
