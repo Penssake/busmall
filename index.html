@@ -7,7 +7,7 @@
   </head>
   <body>
     <header>
-      <div class="header-bar">
+      <div id="header-bar">
         <h1 id="page-title">Bus Mall</h1>
         <!-- <img id="logo" src=""> -->
         <h4 id="slogan">Your first stop to a great ride></h4>
@@ -17,22 +17,24 @@
       <p>Welcome to Bus Mall! We'll be doing some preliminary tests for organizing our new pamphlet! In cooperation with our local transit service, you'll receive your next ride free by participating in this small survey. If you wish to participate, (anonymously of course) you may begin by selecting one of the three images displayed below. <em>Note</em>, you will need to make a total of 25 selections to complete the process.
     </section>
     <section id="image-zone">
-      <div id="selection-counter"></div>
-      <div id="zone1" class="pic-box">
+      <div id="click-counter">
+        <p>Current Click Number:</p>
+      </div>
+      <div id="zone1" class="pic-box left">
         <p id="description1" class="description-box left"></p>
       </div>
       <div id="zone2" class="pic-box">
         <p id="description2" class="description-box center"></p>
       </div>
-      <div id="zone3" class="pic-box">
+      <div id="zone3" class="pic-box right">
         <p id="description3" class="description-box right"></p>
       </div>
     </section>
     <section id="results-zone">
-      <ul>
-      </ul>
+      <canvas id="canvas" width="250" height="250"></canvas>
     </section>
 
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.min.js"></script>
     <script type="text/javascript" src="app.js"></script>
   </body>
 </html>

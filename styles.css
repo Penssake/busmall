@@ -2,26 +2,40 @@ body {
   width: 960px;
 }
 
-.images {
-  width: 50%;
-  height: 50%;
+#header-bar{
+  display: block;
+  width: 100%;
+  box-sizing: content-box;
+  border: 2px solid black;
+}
+
+#page-title {
+  float: left;
+  height: 100%;
+  border-right: 2px solid black;
+  width: 40%;
+  background-color: #9DA3AD;
+}
+
+#click-counter{
+  width: 250px;
+  margin:auto;
+  padding: 5px;
+  border: 2px solid black;
+  border-radius: 5px;
 }
 
 div.pic-box {
   display: inline-block;
-  width: 450px;
-  height: 360px;
-  margin: 30px 47.5px 30px 47.5px;
+  width: 220px;
+  height: 180px;
+  margin: 75px 47.5px 30px 47.5px;
   background-repeat:no-repeat;
   border: 2px solid black;
 }
 
 .left {
   float:left;
-}
-
-.center {
-  align-content: center;
 }
 
 .right {
