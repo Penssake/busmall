@@ -51,12 +51,19 @@ var waterCan = new Product('water-can', 'images/water-can.png', 'It never runs o
 var wineGlass = new Product('wine-glass', 'images/wine-glass.png', 'Impress AND confuse even your snobbiest of wino friends!');
 
 function reset(){
+  oldImages = currentImages;
+  currentImages = [];
   for(var i = 0; i < allProducts.length; i++) {
     allProducts[i].repeat = false;
-    currentImages = [];
     console.log('I\'ve reset!');
   }
 }
+
+// function preventRepeat(){
+//   for(var i = 0; i < oldImages.length; i++){
+//     oldImages[i].repeat = true;
+//   }
+// }
 
 function randomProduct(){
   var index = Math.floor(Math.random() * allProducts.length);
@@ -71,11 +78,11 @@ function displayProducts(event){
   if (event) {
     for(var i = 0; i < 3; i++){
       var product = randomProduct();
-      if (currentImages.indexOf(product) !== -1 && product.repeat === false){
+      while (currentImages.indexOf(product) !== -1 && product.repeat === false ){
         imageZones[i].setAttribute('style', 'background-image: url(' + product.path + ')');
         product.numShown++;
         product.repeat = true;
-        currentImages.push(product);
+        oldImages.push(product);
       } else {
         i--;
       }
@@ -97,19 +104,15 @@ function displayProducts(event){
       zone3.removeEventListener('click', displayProducts);
       console.log('we\'ve reached the limit!');
       for (var i = 0; i < allProducts.length; i++){
-        console.log('making a list or trying');
         var thisProduct = allProducts[i];
         var li = document.createElement('li');
-        var fillerInfo = '';
-        fillerInfo += thisProduct.name;
         if (thisProduct.shown === 0) {
-          fillerInfo += ' | Click Rate: 0%';
+          thisProduct.clickRate = 0;
         } else {
-          fillerInfo += ' | Click Rate: ' + (thisProduct.numClicks / thisProduct.numShown * 100).toFixed(2) + '%';
+          thisProduct.clickRate = (thisProduct.numClicks / thisProduct.numShown * 100).toFixed(2);
         }
-        li.innerText = fillerInfo;
-        ul.appendChild(li);
         displayTable = true;
+        createTable();
       }
     }
   }
@@ -126,6 +129,27 @@ var section = document.getElementById('results-zone');
 var ul = document.createElement('ul');
 section.appendChild(ul);
 
-if(displayTable){
-  
+function createTable(){
+  if(displayTable){
+    var names = [];
+    var clickRates = [];
+    for (var i = 0; i < allProducts.length; i++) {
+      names.push(allProducts[i].name);
+      clickRates.push(allProducts[i].clickRate);
+    }
+    var canvas = document.getElementById('canvas');
+    var ctx = canvas.getContext('2d');
+    var myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: names,
+        datasets: [{
+          label: 'Clickrate Percentage',
+          data: clickRates,
+          backgroundColor: ['#DCDCDC'],
+          borderColor: ['#0075C9']
+        }]
+      }
+    });
+  }
 }
