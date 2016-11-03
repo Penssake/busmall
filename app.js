@@ -6,6 +6,7 @@ var allProducts = [];
 var currentImages = [];
 var oldImages = [];
 var imageZones = [];
+var stats = [];
 
 var displayTable = false;
 
@@ -23,6 +24,7 @@ function Product(name,filePath,description){
   this.description = description;
   this.numShown = 0;
   this.numClicks = 0;
+  this.clickRate = 0;
   this.id = name;
   this.class = 'images';
   allProducts.push(this);
@@ -50,6 +52,14 @@ var usb = new Product('usb', 'images/usb.gif', 'To be honest, not sure why anyon
 var waterCan = new Product('water-can', 'images/water-can.png', 'It never runs out of water! -Ryan Lochte');
 var wineGlass = new Product('wine-glass', 'images/wine-glass.png', 'Impress AND confuse even your snobbiest of wino friends!');
 
+if (localStorage['stats']) {
+  var oldStats = localStorage.getItem('stats');
+  var stringifiedStats = JSON.parse(oldStats);
+  stats = stringifiedStats;
+  for (var i = 0; i < allProducts.length; i++) {
+    allProducts[i].numClicks = stats[i];
+  }
+}
 function reset(){
   currentImages = [];
   for(var i = 0; i < allProducts.length; i++) {
@@ -71,6 +81,11 @@ function randomProduct(){
   return product;
 }
 
+function modifyLocalStorage(){
+  var stringifiedStats = JSON.stringify(stats);
+  localStorage.setItem('stats', stringifiedStats);
+}
+
 function displayProducts(event){
   console.log(event);
   if (event) {
@@ -81,6 +96,7 @@ function displayProducts(event){
         currentImages[i].numClicks++;
       }
     }
+
     for(var i = 0; i < 3; i++){
       var product = randomProduct();
       if (currentImages.indexOf(product) === -1 && product.repeat === false && oldImages.indexOf(product) === -1 ){
@@ -100,21 +116,26 @@ function displayProducts(event){
     reset();
   }
   function endOfSurvey() {
-    if(clickTotal >= 25) {
+    if(clickTotal >= 3) {
       zone1.removeEventListener('click', displayProducts);
       zone2.removeEventListener('click', displayProducts);
       zone3.removeEventListener('click', displayProducts);
       console.log('we\'ve reached the limit!');
       for (var i = 0; i < allProducts.length; i++){
         var thisProduct = allProducts[i];
-        if (thisProduct.numShown === 0) {
-          thisProduct.clickRate = 0;
-        } else {
-          thisProduct.clickRate = (thisProduct.numClicks / thisProduct.numShown * 100).toFixed(2);
-        }
-        displayTable = true;
-        createTable();
+        stats.push(allProducts[i].numClicks);
+        // if (thisProduct.numShown === 0) {
+        //   // thisProduct.clickRate = 0;
+        //   // stats.push(thisProduct.clickRate);
+        // } else {
+          // thisProduct.clickRate = parseFloat((thisProduct.numClicks / thisProduct.numShown * 100).toFixed(2));
+          // stats.push(thisProduct.clickRate);
+          //
       }
+      modifyLocalStorage();
+      displayTable = true;
+      createTable();
+
     }
   }
   endOfSurvey();
@@ -138,6 +159,8 @@ function createTable(){
     for (var i = 0; i < allProducts.length; i++) {
       names.push(allProducts[i].name);
       clickRates.push(allProducts[i].clickRate);
+      // var makeNum = parseInt(allProducts[i].clickRate);
+      // stats.push(makeNum);
     }
     var canvas = document.getElementById('canvas');
     var ctx = canvas.getContext('2d');
@@ -147,7 +170,7 @@ function createTable(){
         labels: names,
         datasets: [{
           label: 'Clickrate Percentage',
-          data: clickRates,
+          data: stats,
           backgroundColor: ['#FFFFFF'],
           borderColor: ['#0075C9']
         }]
